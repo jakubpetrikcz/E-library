@@ -1,0 +1,24 @@
+GET http://localhost:3001/books
+
+###
+
+POST http://localhost:3001/book/new
+Content-Type: application/json
+
+{
+    "bookName": "Harry Potter",
+    "authorName": "J. K. Rowling",
+    "pages": 100,
+    "releaseYear": "2022",
+}
+
+
+###
+
+DELETE http://localhost:3001/book/delete/637797c78632ef75539c4d5f
+
+
+###
+
+
+PUT http://localhost:3001/todo/complete/6376605395fcfd3319e46378

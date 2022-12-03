@@ -1,0 +1,34 @@
+[
+    {
+        "bookName": "Harry Potter and order of the phoenix and something",
+        "authorName": "J. K. Rowling",
+        "pages": 100,
+        "releaseYear": "2022",
+        "image": "../img/HP.jpg",
+        "amount": 2
+    },
+    {
+        "bookName": "Harry Potter and",
+        "authorName": "J. K. Rowling",
+        "pages": 101,
+        "releaseYear": "2022",
+        "image": "../img/HP.jpg",
+        "amount": 2
+    },
+    {
+        "bookName": "Harry Potter and order",
+        "authorName": "J. K. Rowling",
+        "pages": 101,
+        "releaseYear": "2022",
+        "image": "../img/HP.jpg",
+        "amount": 2
+    },
+    {
+        "bookName": "Harry Potter and order ahoj",
+        "authorName": "J. K. Rowling",
+        "pages": 101,
+        "releaseYear": "2022",
+        "image": "../img/HP.jpg",
+        "amount": 2
+    }
+]

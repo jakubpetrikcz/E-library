@@ -1,0 +1,15 @@
+.grid-container {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 25px;
+}
+
+.title {
+    color: white;
+}
+
+.card-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 1rem;
+}
