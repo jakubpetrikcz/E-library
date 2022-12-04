@@ -11,6 +11,8 @@ const API_BASE = "http://localhost:3001";
 
 const CardContainer = () => {
     const [books, setBooks] = useState([]);
+    const [query, setQuery] = useState("");
+    const [filteredResults, setFilteredResults] = useState([]);
     const [showAddModal, setShowAddModal] = useState(false);
     const [showEditModal, setShowEditModal] = useState(false);
     const [newBook, setNewBook] = useState({
@@ -88,17 +90,47 @@ const CardContainer = () => {
         });
     };
 
+    const searchItems = (searchValue) => {
+        setQuery(searchValue);
+        if (query !== "") {
+            const filteredData = books.filter((item) => {
+                return Object.values(item)
+                    .join("")
+                    .toLowerCase()
+                    .includes(query.toLowerCase());
+            });
+            setFilteredResults(filteredData);
+        } else {
+            setFilteredResults(books);
+        }
+    };
+
     return (
         <>
             <div className="grid-container">
                 <h1 className="title">Catalogue</h1>
+                <input
+                    type="text"
+                    placeholder="Search Book ..."
+                    value={query}
+                    onChange={(e) => searchItems(e.target.value)}
+                />
                 <div className="card-container">
-                    <Card
-                        books={books}
-                        onDeleteClick={deleteBook}
-                        onEditClick={editBook}
-                        setShowEditModal={setShowEditModal}
-                    />
+                    {query.length > 3 ? (
+                        <Card
+                            books={filteredResults}
+                            onDeleteClick={deleteBook}
+                            onEditClick={editBook}
+                            setShowEditModal={setShowEditModal}
+                        />
+                    ) : (
+                        <Card
+                            books={books}
+                            onDeleteClick={deleteBook}
+                            onEditClick={editBook}
+                            setShowEditModal={setShowEditModal}
+                        />
+                    )}
                 </div>
                 <ButtonAdd onClick={() => setShowAddModal(true)} />
                 <ModalAdd

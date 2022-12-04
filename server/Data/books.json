@@ -1,6 +1,6 @@
 [
     {
-        "bookName": "Harry Potter and order of the phoenix and something",
+        "bookName": "Harry Potter and order of the phoenix",
         "authorName": "J. K. Rowling",
         "pages": 100,
         "releaseYear": "2022",
@@ -8,7 +8,7 @@
         "amount": 2
     },
     {
-        "bookName": "Harry Potter and",
+        "bookName": "The Witcher",
         "authorName": "J. K. Rowling",
         "pages": 101,
         "releaseYear": "2022",
@@ -16,7 +16,7 @@
         "amount": 2
     },
     {
-        "bookName": "Harry Potter and order",
+        "bookName": "Fantastic Beasts",
         "authorName": "J. K. Rowling",
         "pages": 101,
         "releaseYear": "2022",
@@ -24,7 +24,7 @@
         "amount": 2
     },
     {
-        "bookName": "Harry Potter and order ahoj",
+        "bookName": "The lord of the rings",
         "authorName": "J. K. Rowling",
         "pages": 101,
         "releaseYear": "2022",
