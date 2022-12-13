@@ -6,12 +6,13 @@ import Card from "../Card/Card";
 import ButtonAdd from "../ButtonAdd/ButtonAdd";
 import ModalAdd from "../ModalAdd/ModalAdd";
 import ModalEdit from "../ModalEdit/ModalEdit";
+// import { useSearchParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 const API_BASE = "http://localhost:3001";
 
 const CardContainer = () => {
     const [books, setBooks] = useState([]);
-    const [query, setQuery] = useState("");
     const [filteredResults, setFilteredResults] = useState([]);
     const [showAddModal, setShowAddModal] = useState(false);
     const [showEditModal, setShowEditModal] = useState(false);
@@ -25,14 +26,23 @@ const CardContainer = () => {
         amount: 0,
     });
 
+    // const [searchParams, setSearchParams] = useSearchParams();
+    const [query, setQuery] = useState({
+        bookName: "",
+        authorName: "",
+    });
+    const navigate = useNavigate();
+    const location = useLocation();
+    const params = useParams();
+
     useEffect(() => {
         axios
-            .get(API_BASE + "/books")
+            .get(API_BASE + `/books`)
             .then((res) => {
                 setBooks(res.data);
             })
             .catch((err) => console.log(err));
-    }, [books]);
+    }, []);
 
     const editBook = async (
         id,
@@ -78,6 +88,7 @@ const CardContainer = () => {
             .catch((err) => console.log(err));
 
         setShowEditModal(false);
+        window.location.reload();
     };
 
     const handleChange = (e) => {
@@ -90,33 +101,77 @@ const CardContainer = () => {
         });
     };
 
-    const searchItems = (searchValue) => {
-        setQuery(searchValue);
-        if (query !== "") {
-            const filteredData = books.filter((item) => {
-                return Object.values(item)
-                    .join("")
-                    .toLowerCase()
-                    .includes(query.toLowerCase());
-            });
-            setFilteredResults(filteredData);
+    const handleInputChange = (event) => {
+        const { name, value } = event.target;
+        setQuery((prevQuery) => ({ ...prevQuery, [name]: value }));
+    };
+
+    const searchItems = (e) => {
+        // setQuery(searchValue);
+        e.preventDefault();
+        // if (query !== "" && query.length > 3) {
+        //     navigate(
+        //         `/books?bookName=${query.bookName}&authorName=${query.authorName}`
+        //     );
+        //     axios
+        //         .get(
+        //             API_BASE +
+        //                 `/books?bookName=${query.bookName}&authorName=${query.authorName}`
+        //         )
+        //         .then((res) => {
+        //             console.log(res.data);
+        //             setFilteredResults(res.data);
+        //         })
+        //         .catch((err) => console.log(err));
+        // } else {
+        //     navigate("/");
+        //     setFilteredResults(books);
+        // }
+
+        if (query.bookName) {
+            console.log("ahoj");
+            navigate(`/books?bookName=${query.bookName}`);
+            axios
+                .get(API_BASE + `/books?bookName=${query.bookName}`)
+                .then((res) => {
+                    console.log(res.data);
+                    setFilteredResults(res.data);
+                })
+                .catch((err) => console.log(err));
         } else {
+            navigate("/");
             setFilteredResults(books);
         }
     };
+
+    
 
     return (
         <>
             <div className="grid-container">
                 <h1 className="title">Catalogue</h1>
-                <input
-                    type="text"
-                    placeholder="Search Book ..."
-                    value={query}
-                    onChange={(e) => searchItems(e.target.value)}
-                />
+                <form onSubmit={searchItems}>
+                    <input
+                        type="text"
+                        placeholder="title"
+                        name="bookName"
+                        value={query.bookName}
+                        onChange={handleInputChange}
+                    />
+                    {/* <input
+                        type="text"
+                        placeholder="author"
+                        name="authorName"
+                        value={query.authorName}
+                        onChange={handleInputChange}
+                    /> */}
+                    <button
+                        style={{ height: "50px", width: "50px" }}
+                        type="submit"
+                    />
+                </form>
                 <div className="card-container">
-                    {query.length > 3 ? (
+                    {query.bookName ? (
                         <Card
                             books={filteredResults}
                             onDeleteClick={deleteBook}

@@ -37,6 +37,7 @@ const ModalAdd = ({ isAdd, onClickClose }) => {
             .catch((err) => console.log(err));
 
         onClickClose();
+        window.location.reload();
     };
 
     return (

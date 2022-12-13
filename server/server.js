@@ -29,9 +29,24 @@ books.forEach(function (n, i) {
 });
 
 app.get("/books", async (req, res) => {
-    const books = await Book.find();
+    const query = {};
 
-    res.json(books);
+    if (req.query.bookName) {
+        query.bookName = { $regex: req.query.bookName, $options: "i" };
+    }
+
+    if (req.query.authorName) {
+        query.authorName = { $regex: req.query.authorName, $options: "i" };
+    }
+
+    if (Object.keys(req.query).length === 0) {
+        const books = await Book.find();
+        res.json(books);
+    } else {
+        console.log("ahoj");
+        const books = await Book.find(query);
+        res.json(books);
+    }
 });
 
 app.post("/book/new", async (req, res) => {
@@ -51,7 +66,7 @@ app.delete("/book/delete/:id", async (req, res) => {
 });
 
 app.put("/book/update/:id", async (req, res) => {
-    Book.findByIdAndUpdate(
+    const result = await Book.findByIdAndUpdate(
         { _id: req.params.id },
         {
             bookName: req.body.bookName,
@@ -60,9 +75,9 @@ app.put("/book/update/:id", async (req, res) => {
             releaseYear: req.body.releaseYear,
             amount: req.body.amount,
         }
-    )
-        .then((doc) => console.log(doc))
-        .catch((err) => console.log(err));
+    );
+
+    res.json(result);
     // .then((doc) => console.log(doc))
     // .catch((err) => console.log(err));
     // const result = await Book.findByIdAndUpdate(req.params.id);
