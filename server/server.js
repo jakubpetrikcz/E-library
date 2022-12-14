@@ -39,11 +39,14 @@ app.get("/books", async (req, res) => {
         query.authorName = { $regex: req.query.authorName, $options: "i" };
     }
 
+    if (req.query.releaseYear) {
+        query.releaseYear = Number(req.query.releaseYear);
+    }
+
     if (Object.keys(req.query).length === 0) {
         const books = await Book.find();
         res.json(books);
     } else {
-        console.log("ahoj");
         const books = await Book.find(query);
         res.json(books);
     }

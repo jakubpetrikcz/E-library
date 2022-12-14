@@ -21,7 +21,7 @@ const CardContainer = () => {
         bookName: "",
         authorName: "",
         pages: 0,
-        releaseYear: "",
+        releaseYear: 0,
         image: "",
         amount: 0,
     });
@@ -30,10 +30,9 @@ const CardContainer = () => {
     const [query, setQuery] = useState({
         bookName: "",
         authorName: "",
+        releaseYear: 0,
     });
     const navigate = useNavigate();
-    const location = useLocation();
-    const params = useParams();
 
     useEffect(() => {
         axios
@@ -109,39 +108,32 @@ const CardContainer = () => {
     const searchItems = (e) => {
         // setQuery(searchValue);
         e.preventDefault();
-        // if (query !== "" && query.length > 3) {
-        //     navigate(
-        //         `/books?bookName=${query.bookName}&authorName=${query.authorName}`
-        //     );
-        //     axios
-        //         .get(
-        //             API_BASE +
-        //                 `/books?bookName=${query.bookName}&authorName=${query.authorName}`
-        //         )
-        //         .then((res) => {
-        //             console.log(res.data);
-        //             setFilteredResults(res.data);
-        //         })
-        //         .catch((err) => console.log(err));
-        // } else {
-        //     navigate("/");
-        //     setFilteredResults(books);
-        // }
 
+        let queryString = "";
         if (query.bookName) {
-            console.log("ahoj");
-            navigate(`/books?bookName=${query.bookName}`);
-            axios
-                .get(API_BASE + `/books?bookName=${query.bookName}`)
-                .then((res) => {
-                    console.log(res.data);
-                    setFilteredResults(res.data);
-                })
-                .catch((err) => console.log(err));
-        } else {
+            queryString += `bookName=${query.bookName}`;
+        }
+        if (query.authorName) {
+            queryString += `${queryString ? "&" : ""}authorName=${query.authorName}`;
+        }
+        if (query.releaseYear) {
+            queryString += `${queryString ? "&" : ""}releaseYear=${query.releaseYear}`;
+        }
+
+        if (!queryString) {
             navigate("/");
             setFilteredResults(books);
+            return;
         }
+
+        navigate(`/books?${queryString}`);
+
+        axios
+            .get(`${API_BASE}/books?${queryString}`)
+            .then((res) => {
+                setFilteredResults(res.data);
+            })
+            .catch((err) => console.log(err));
     };
 
     
@@ -158,20 +150,27 @@ const CardContainer = () => {
                         value={query.bookName}
                         onChange={handleInputChange}
                     />
-                    {/* <input
+                    <input
                         type="text"
                         placeholder="author"
                         name="authorName"
                         value={query.authorName}
                         onChange={handleInputChange}
-                    /> */}
+                    />
+                    <input
+                        type="number"
+                        placeholder="year"
+                        name="releaseYear"
+                        value={query.releaseYear}
+                        onChange={handleInputChange}
+                    />
                     <button
                         style={{ height: "50px", width: "50px" }}
                         type="submit"
                     />
                 </form>
                 <div className="card-container">
-                    {query.bookName ? (
+                    {query.bookName || query.authorName || query.releaseYear ? (
                         <Card
                             books={filteredResults}
                             onDeleteClick={deleteBook}
