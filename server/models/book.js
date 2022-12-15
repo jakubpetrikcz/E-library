@@ -29,7 +29,7 @@ const BookSchema = new Schema(
             // required: true,
         },
     },
-    { versionKey: false }
+    {versionKey: false}
 );
 
 const Book = mongoose.model("Book", BookSchema);
