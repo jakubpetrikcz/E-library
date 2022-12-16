@@ -7,7 +7,7 @@ import ButtonAdd from "../ButtonAdd/ButtonAdd";
 import ModalAdd from "../ModalAdd/ModalAdd";
 import ModalEdit from "../ModalEdit/ModalEdit";
 // import { useSearchParams } from "react-router-dom";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 const API_BASE = "http://localhost:3001";
 
@@ -33,6 +33,7 @@ const CardContainer = () => {
         releaseYear: 0,
     });
     const navigate = useNavigate();
+    const { bookName, authorName, releaseYear } = useParams();
 
     useEffect(() => {
         axios
@@ -106,7 +107,6 @@ const CardContainer = () => {
     };
 
     const searchItems = (e) => {
-        // setQuery(searchValue);
         e.preventDefault();
 
         let queryString = "";
@@ -121,12 +121,9 @@ const CardContainer = () => {
         }
 
         if (!queryString) {
-            navigate("/");
             setFilteredResults(books);
             return;
         }
-
-        navigate(`/books?${queryString}`);
 
         axios
             .get(`${API_BASE}/books?${queryString}`)
