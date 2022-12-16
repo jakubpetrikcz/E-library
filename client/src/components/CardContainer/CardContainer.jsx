@@ -6,8 +6,6 @@ import Card from "../Card/Card";
 import ButtonAdd from "../ButtonAdd/ButtonAdd";
 import ModalAdd from "../ModalAdd/ModalAdd";
 import ModalEdit from "../ModalEdit/ModalEdit";
-// import { useSearchParams } from "react-router-dom";
-import { useNavigate, useParams } from "react-router-dom";
 
 const API_BASE = "http://localhost:3001";
 
@@ -32,8 +30,6 @@ const CardContainer = () => {
         authorName: "",
         releaseYear: 0,
     });
-    const navigate = useNavigate();
-    const { bookName, authorName, releaseYear } = useParams();
 
     useEffect(() => {
         axios

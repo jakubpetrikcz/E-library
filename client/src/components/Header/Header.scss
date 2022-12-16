@@ -1,0 +1,22 @@
+header {
+
+  .flex {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .logo {
+    font-weight: bold;
+  }
+
+  nav {
+    display: flex;
+    gap: 1rem;
+
+    a {
+      color: white;
+      text-decoration: none;
+    }
+  }
+
+}
