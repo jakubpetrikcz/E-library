@@ -1,14 +1,14 @@
 const data = require("../data/data.json");
 
-const Book = require("../models/book");
+const BookController = require("../models/book");
 
 const insertBooks = async (books) => {
     try {
-        const numBooks = await Book.countDocuments();
+        const numBooks = await BookController.countDocuments();
 
         if (numBooks === 0) {
 
-            const insertPromises = books.map(book => Book.insertMany(book));
+            const insertPromises = books.map(book => BookController.insertMany(book));
 
             await Promise.all(insertPromises);
 
@@ -40,16 +40,16 @@ const getAllBooks = async (req, res) => {
     }
 
     if (Object.keys(req.query).length === 0) {
-        const books = await Book.find();
+        const books = await BookController.find();
         res.json(books);
     } else {
-        const books = await Book.find(query);
+        const books = await BookController.find(query);
         res.json(books);
     }
 };
 
 const createBook = async (req, res) => {
-    const book = new Book(req.body);
+    const book = new BookController(req.body);
 
     book.save()
         .then((doc) => console.log(doc))
@@ -59,22 +59,13 @@ const createBook = async (req, res) => {
 };
 
 const deleteBook = async (req, res) => {
-    const result = await Book.findByIdAndDelete(req.params.id);
+    const result = await BookController.findByIdAndDelete(req.params.id);
 
     res.json(result);
 };
 
 const updateBook = async (req, res) => {
-    const result = await Book.findByIdAndUpdate(
-        {_id: req.params.id},
-        {
-            bookName: req.body.bookName,
-            authorName: req.body.authorName,
-            pages: req.body.pages,
-            releaseYear: req.body.releaseYear,
-            amount: req.body.amount,
-        }
-    );
+    const result = await BookController.findByIdAndUpdate({ _id: req.params.id }, req.body);
 
     res.json(result);
 };

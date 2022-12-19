@@ -4,8 +4,9 @@ import { useState, useEffect } from "react";
 import "./CardContainer.scss";
 import Card from "../Card/Card";
 import ButtonAdd from "../ButtonAdd/ButtonAdd";
-import ModalAdd from "../ModalAdd/ModalAdd";
-import ModalEdit from "../ModalEdit/ModalEdit";
+import BooksModalAdd from "../BooksModalAdd/BooksModalAdd";
+import BooksModalEdit from "../BooksModalEdit/BooksModalEdit";
+import BooksFormFilter from "../BooksFormFilter/BooksFormFilter";
 
 const API_BASE = "http://localhost:3001";
 
@@ -24,12 +25,12 @@ const CardContainer = () => {
         amount: 0,
     });
 
-    // const [searchParams, setSearchParams] = useSearchParams();
     const [query, setQuery] = useState({
         bookName: "",
         authorName: "",
         releaseYear: 0,
     });
+
 
     useEffect(() => {
         axios
@@ -97,71 +98,13 @@ const CardContainer = () => {
         });
     };
 
-    const handleInputChange = (event) => {
-        const { name, value } = event.target;
-        setQuery((prevQuery) => ({ ...prevQuery, [name]: value }));
-    };
 
-    const searchItems = (e) => {
-        e.preventDefault();
-
-        let queryString = "";
-        if (query.bookName) {
-            queryString += `bookName=${query.bookName}`;
-        }
-        if (query.authorName) {
-            queryString += `${queryString ? "&" : ""}authorName=${query.authorName}`;
-        }
-        if (query.releaseYear) {
-            queryString += `${queryString ? "&" : ""}releaseYear=${query.releaseYear}`;
-        }
-
-        if (!queryString) {
-            setFilteredResults(books);
-            return;
-        }
-
-        axios
-            .get(`${API_BASE}/books?${queryString}`)
-            .then((res) => {
-                setFilteredResults(res.data);
-            })
-            .catch((err) => console.log(err));
-    };
-
-    
 
     return (
         <>
             <div className="grid-container">
                 <h1 className="title">Catalogue</h1>
-                <form onSubmit={searchItems}>
-                    <input
-                        type="text"
-                        placeholder="title"
-                        name="bookName"
-                        value={query.bookName}
-                        onChange={handleInputChange}
-                    />
-                    <input
-                        type="text"
-                        placeholder="author"
-                        name="authorName"
-                        value={query.authorName}
-                        onChange={handleInputChange}
-                    />
-                    <input
-                        type="number"
-                        placeholder="year"
-                        name="releaseYear"
-                        value={query.releaseYear}
-                        onChange={handleInputChange}
-                    />
-                    <button
-                        style={{ height: "50px", width: "50px" }}
-                        type="submit"
-                    />
-                </form>
+                <BooksFormFilter books={books} query={query} setQuery={setQuery} setFilteredResults={setFilteredResults} />
                 <div className="card-container">
                     {query.bookName || query.authorName || query.releaseYear ? (
                         <Card
@@ -180,12 +123,11 @@ const CardContainer = () => {
                     )}
                 </div>
                 <ButtonAdd onClick={() => setShowAddModal(true)} />
-                <ModalAdd
+                <BooksModalAdd
                     isAdd={showAddModal}
                     onClickClose={() => setShowAddModal(false)}
                 />
-
-                <ModalEdit
+                <BooksModalEdit
                     isEdit={showEditModal}
                     editBook={saveUpdatedPost}
                     onClickClose={() => setShowEditModal(false)}

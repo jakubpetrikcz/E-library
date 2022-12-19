@@ -41,6 +41,14 @@
       "address": "neco 123",
       "username": "honzanovak",
       "password": "necozapekliteho"
+    },
+    {
+      "name": "Jirka",
+      "surname": "Někdo",
+      "birthNumber": "12348/98",
+      "address": "neco 5456",
+      "username": "jirkanekdo",
+      "password": "jirkanekdoasi"
     }
   ]
 }

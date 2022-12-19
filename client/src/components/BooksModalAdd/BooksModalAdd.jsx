@@ -1,70 +1,98 @@
 import React from "react";
-import "./ModalEdit.scss";
+import axios from "axios";
+import { useState } from "react";
+import "./BooksModalAdd.scss";
 
-const ModalEdit = ({
-    isEdit,
-    editBook,
-    onClickClose,
-    handleChange,
-    newBook,
-}) => {
+const API_BASE = "http://localhost:3001";
+
+const BooksModalAdd = ({ isAdd, onClickClose }) => {
+    const [book, setBook] = useState({
+        bookName: "",
+        authorName: "",
+        pages: 0,
+        releaseYear: "",
+        image: "",
+        amount: 0,
+    });
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setBook((prev) => {
+            console.log(prev);
+            return {
+                ...prev,
+                [name]: value,
+            };
+        });
+    };
+
+    const addBook = async (e) => {
+        e.preventDefault();
+
+        axios
+            .post(API_BASE + "/book/new/", book)
+            .then((res) => {
+                setBook(res.data);
+            })
+            .catch((err) => console.log(err));
+
+        onClickClose();
+        window.location.reload();
+    };
+
     return (
         <>
-            {isEdit ? (
+            {isAdd ? (
                 <div className="popup">
                     <div className="closePopup" onClick={onClickClose}>
                         x
                     </div>
                     <div className="content">
-                        <h3>Edit Book</h3>
+                        <h3>Add Book</h3>
                         <input
-                            placeholder="title"
                             type="text"
                             className="add-todo-input"
                             name="bookName"
                             onChange={handleChange}
-                            value={newBook.bookName ? newBook.bookName : ""}
+                            value={book.bookName}
                         />
-
                         <input
                             type="text"
                             className="add-todo-input"
                             name="authorName"
                             onChange={handleChange}
-                            value={newBook.authorName ? newBook.authorName : ""}
+                            value={book.authorName}
                         />
                         <input
                             type="number"
                             className="add-todo-input"
                             name="pages"
                             onChange={handleChange}
-                            value={newBook.pages ? newBook.pages : 0}
+                            value={book.pages}
                         />
                         <input
                             type="date"
                             className="add-todo-input"
                             name="releaseYear"
                             onChange={handleChange}
-                            value={
-                                newBook.releaseYear ? newBook.releaseYear : ""
-                            }
+                            value={book.releaseYear}
                         />
                         <input
                             type="text"
                             className="add-todo-input"
                             name="image"
                             onChange={handleChange}
-                            value={newBook.image ? newBook.image : ""}
+                            value={book.image}
                         />
                         <input
                             type="number"
                             className="add-todo-input"
                             name="amount"
                             onChange={handleChange}
-                            value={newBook.amount ? newBook.amount : 0}
+                            value={book.amount}
                         />
-                        <div className="button" onClick={editBook}>
-                            Edit Book
+                        <div className="button" onClick={addBook}>
+                            Create Task
                         </div>
                     </div>
                 </div>
@@ -75,4 +103,4 @@ const ModalEdit = ({
     );
 };
 
-export default ModalEdit;
+export default BooksModalAdd;
