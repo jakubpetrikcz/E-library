@@ -22,6 +22,7 @@ const Login = () => {
         await axios.post(API_BASE + "/user/login", user)
             .then((res) => {
                 if (res.data.user) {
+                    localStorage.setItem("token", res.data.user);
                     alert("Login successful");
                     window.location.href = "/";
                 } else {

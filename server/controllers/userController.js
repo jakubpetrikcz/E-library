@@ -1,4 +1,6 @@
 const data = require("../data/data.json");
+const bcrypt = require("bcryptjs");
+const jwt = require('jsonwebtoken');
 
 const UserController = require("../models/user");
 
@@ -49,13 +51,28 @@ const getAllUsers = async (req, res) => {
 };
 
 const createUser = async (req, res) => {
-    const user = new UserController(req.body);
+    // const user = new UserController(req.body);
 
-    user.save()
-        .then((doc) => console.log(doc))
-        .catch((err) => console.log(err));
+    try {
+        const newPassword = await bcrypt.hash(req.body.password, 10);
+        await UserController.create({
+            name: req.body.name,
+            surname: req.body.surname,
+            birthNumber: req.body.birthNumber,
+            username: req.body.username,
+            password: newPassword,
+        })
+    } catch (err) {
+        console.log(err)
+    }
 
-    res.json(user);
+    // user.save()
+    //     .then((doc) => {
+    //
+    //     })
+    //     .catch((err) => console.log(err));
+
+    // res.json(user);
 };
 
 const deleteUser = async (req, res) => {
@@ -73,14 +90,40 @@ const updateUser = async (req, res) => {
 const findUserToLogin = async (req, res) => {
     const user = await UserController.findOne({
         username: req.body.username,
-        password: req.body.password,
     })
 
-    if (user) {
-        return res.json({status: "ok", user: true})
+    if (!user) {
+        return {status: "error", error: "Invalid login"}
+    }
+
+    const isPasswordValid = await bcrypt.compare(req.body.password, user.password);
+
+    if (isPasswordValid) {
+        const token = jwt.sign({
+            name: user.name,
+            surname: user.surname,
+        }, "secret123")
+        return res.json({status: "ok", user: token})
     } else {
         return res.json({status: "error", user: false})
     }
+}
+
+const userData = async (req, res) => {
+    const { token } = req.body;
+    try {
+        const user = jwt.verify(token, "secret123");
+        console.log(user);
+
+        const username = user.username;
+        UserController.findOne({ username: username })
+            .then((data) => {
+                res.send({ status: "ok", data: data });
+            })
+            .catch((error) => {
+                res.send({ status: "error", data: error });
+            });
+    } catch (error) {}
 }
 
 module.exports = {
@@ -88,5 +131,6 @@ module.exports = {
     createUser,
     deleteUser,
     updateUser,
-    findUserToLogin
+    findUserToLogin,
+    userData
 }
