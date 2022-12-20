@@ -70,9 +70,23 @@ const updateUser = async (req, res) => {
     res.json(result);
 };
 
+const findUserToLogin = async (req, res) => {
+    const user = await UserController.findOne({
+        username: req.body.username,
+        password: req.body.password,
+    })
+
+    if (user) {
+        return res.json({status: "ok", user: true})
+    } else {
+        return res.json({status: "error", user: false})
+    }
+}
+
 module.exports = {
     getAllUsers,
     createUser,
     deleteUser,
-    updateUser
+    updateUser,
+    findUserToLogin
 }

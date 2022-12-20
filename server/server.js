@@ -7,7 +7,7 @@ const {
     updateBook,
     deleteBook
 } = require('./controllers/bookController');
-const {getAllUsers, createUser, deleteUser, updateUser} = require("./controllers/userController");
+const {getAllUsers, createUser, deleteUser, updateUser, findUserToLogin} = require("./controllers/userController");
 
 const app = express();
 
@@ -35,6 +35,13 @@ app.get("/users", getAllUsers);
 app.post("/user/new", createUser);
 app.delete("/user/delete/:id", deleteUser);
 app.put("/user/update/:id", updateUser);
+
+app.post("/user/login", findUserToLogin);
+
+// app.post("/register", (req, res) => {
+//     console.log(req.body);
+//     res.json({status: "ok"});
+// })
 
 
 app.listen(3001, () => console.log("Server started on port 3001"));
