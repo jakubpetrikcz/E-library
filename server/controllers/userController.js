@@ -51,8 +51,6 @@ const getAllUsers = async (req, res) => {
 };
 
 const createUser = async (req, res) => {
-    // const user = new UserController(req.body);
-
     try {
         const newPassword = await bcrypt.hash(req.body.password, 10);
         await UserController.create({
@@ -65,14 +63,6 @@ const createUser = async (req, res) => {
     } catch (err) {
         console.log(err)
     }
-
-    // user.save()
-    //     .then((doc) => {
-    //
-    //     })
-    //     .catch((err) => console.log(err));
-
-    // res.json(user);
 };
 
 const deleteUser = async (req, res) => {
@@ -102,6 +92,7 @@ const findUserToLogin = async (req, res) => {
         const token = jwt.sign({
             name: user.name,
             surname: user.surname,
+            username: user.username,
         }, "secret123")
         return res.json({status: "ok", user: token})
     } else {
@@ -111,6 +102,7 @@ const findUserToLogin = async (req, res) => {
 
 const userData = async (req, res) => {
     const { token } = req.body;
+
     try {
         const user = jwt.verify(token, "secret123");
         console.log(user);

@@ -2,6 +2,7 @@ import UserCard from "../components/UserCard/UserCard";
 import axios from "axios";
 import React, {useEffect, useState} from "react";
 import UsersModalEdit from "../components/UsersModalEdit/UsersModalEdit";
+import Header from "../components/Header/Header";
 
 const API_BASE = "http://localhost:3001";
 
@@ -84,18 +85,22 @@ const Users = () => {
 
 
     return (
-        <div className="grid-container">
-            <h1 className="title">Users</h1>
-            <UserCard users={users} onEditClick={editUser} setShowEditModal={setShowEditModal} onDeleteClick={deleteUser}/>
+        <>
+            <Header />
+            <div className="grid-container">
+                <h1 className="title">Users</h1>
+                <UserCard users={users} onEditClick={editUser} setShowEditModal={setShowEditModal} onDeleteClick={deleteUser}/>
 
-            <UsersModalEdit
-                isEdit={showEditModal}
-                editUser={saveUpdatedPost}
-                onClickClose={() => setShowEditModal(false)}
-                handleChange={handleChange}
-                newUser={newUser}
-            />
-        </div>
+                <UsersModalEdit
+                    isEdit={showEditModal}
+                    editUser={saveUpdatedPost}
+                    onClickClose={() => setShowEditModal(false)}
+                    handleChange={handleChange}
+                    newUser={newUser}
+                />
+            </div>
+        </>
+
     )
 }
 

@@ -2,6 +2,7 @@
 
 import React, {useState} from "react";
 import axios from "axios";
+import {Link} from "react-router-dom";
 
 const API_BASE = "http://localhost:3001";
 
@@ -39,6 +40,7 @@ const Register = () => {
                 <input type="password" placeholder="password" name="password" value={user.password} onChange={handleInputChange}/>
                 <input type="submit" value="Register"/>
             </form>
+            <Link style={{color: "white"}} to="/login">Already have an account? Sign in...</Link>
         </div>
     )
 }
