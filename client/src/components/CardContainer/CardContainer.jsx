@@ -1,6 +1,6 @@
 import React from "react";
 import axios from "axios";
-import { useState, useEffect } from "react";
+import {useState, useEffect} from "react";
 import "./CardContainer.scss";
 import Card from "../Card/Card";
 import ButtonAdd from "../ButtonAdd/ButtonAdd";
@@ -89,7 +89,7 @@ const CardContainer = () => {
     };
 
     const handleChange = (e) => {
-        const { name, value } = e.target;
+        const {name, value} = e.target;
         setNewBook((prev) => {
             return {
                 ...prev,
@@ -98,13 +98,42 @@ const CardContainer = () => {
         });
     };
 
+    const handleBorrowBook = async (
+        id,
+        bookName,
+        authorName,
+        pages,
+        releaseYear,
+        image,
+        amount
+    ) => {
+        try {
+            // Send a request to the backend to borrow the book
+            const response = await axios.put(API_BASE + '/borrowBook', {
+                userId: "63a219a580df74b5c8ba49bc",
+                book: {
+                    id: id,
+                    bookName: bookName,
+                    authorName: authorName,
+                    pages: pages,
+                    releaseYear: releaseYear,
+                    image: image,
+                    amount: amount,
+                }
+            });
+            console.log(response);
+        } catch (error) {
+            console.error(error);
+        }
+    }
 
 
     return (
         <>
             <div className="grid-container">
                 <h1 className="title">Catalogue</h1>
-                <BooksFormFilter books={books} query={query} setQuery={setQuery} setFilteredResults={setFilteredResults} />
+                <BooksFormFilter books={books} query={query} setQuery={setQuery}
+                                 setFilteredResults={setFilteredResults}/>
                 <div className="card-container">
                     {query.bookName || query.authorName || query.releaseYear ? (
                         <Card
@@ -119,10 +148,11 @@ const CardContainer = () => {
                             onDeleteClick={deleteBook}
                             onEditClick={editBook}
                             setShowEditModal={setShowEditModal}
+                            onAddClick={handleBorrowBook}
                         />
                     )}
                 </div>
-                <ButtonAdd onClick={() => setShowAddModal(true)} />
+                <ButtonAdd onClick={() => setShowAddModal(true)}/>
                 <BooksModalAdd
                     isAdd={showAddModal}
                     onClickClose={() => setShowAddModal(false)}

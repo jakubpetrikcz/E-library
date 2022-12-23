@@ -31,6 +31,7 @@ const Header = () => {
                     <nav>
                         <Link to="/">Home</Link>
                         <Link to="/users">Users</Link>
+                        <Link to="/borrowed">Borrowed</Link>
                         {/*<Link to="/login">Login</Link>*/}
                         {/*<Link to="/register">Register</Link>*/}
                     </nav>

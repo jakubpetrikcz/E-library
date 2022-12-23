@@ -2,7 +2,7 @@ import React from "react";
 import ButtonDelete from "../ButtonDelete/ButtonDelete";
 import "./Card.scss";
 
-const Card = ({ books, onDeleteClick, onEditClick, setShowEditModal }) => {
+const Card = ({books, onDeleteClick, onEditClick, setShowEditModal, onAddClick}) => {
     return (
         <>
             {books.map((book) => {
@@ -28,7 +28,16 @@ const Card = ({ books, onDeleteClick, onEditClick, setShowEditModal }) => {
                             <div className="card__body__bottom">
                                 <span>{book.amount}</span>
                                 <div className="card__body__bottom__btns">
-                                    <button>Borrow</button>
+                                    <button onClick={() => onAddClick(
+                                        book._id,
+                                        book.bookName,
+                                        book.authorName,
+                                        book.pages,
+                                        book.releaseYear,
+                                        book.image,
+                                        book.amount
+                                    )}>Borrow
+                                    </button>
                                     <button
                                         className="edit-btn"
                                         onClick={() => {

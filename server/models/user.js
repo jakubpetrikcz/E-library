@@ -18,7 +18,11 @@ const UserSchema = new Schema(
         },
         password: {
             type: String,
-        }
+        },
+        borrowedBooks: [{
+            type: Object, // tady je objectId, což možná bere jenom ID?
+            ref: "Book"
+        }]
     },
     {versionKey: false}
 );
