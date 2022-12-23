@@ -41,7 +41,7 @@ const BookFormFilter = ({books, query, setQuery, setFilteredResults}) => {
 
     return (
         <>
-            <form onSubmit={searchItems}>
+            <form className="padding-bottom" onSubmit={searchItems}>
                 <input
                     type="text"
                     placeholder="title"

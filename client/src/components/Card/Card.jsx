@@ -7,59 +7,55 @@ const Card = ({books, onDeleteClick, onEditClick, setShowEditModal, onAddClick})
         <>
             {books.map((book) => {
                 return (
-                    <div className="card" key={book._id}>
-                        <div className="card__header">
-                            <img
-                                className="card__image"
-                                src={book.image}
-                                alt="harry potter book"
-                            />
-                        </div>
-                        <div className="card__body">
-                            <div className="card__body__top">
-                                <h3 className="title">{book.bookName}</h3>
-                                <span className="author">
-                                    by <strong>{book.authorName}</strong>
-                                </span>
-                                <span className="year">
-                                    Published: {book.releaseYear}
-                                </span>
+                    <div className="book" key={book._id}>
+                        <picture className="book__img">
+                            <img src={book.image} alt={book.bookName} />
+                        </picture>
+
+                        <div className="book__content">
+                            <h3 className="book__title">{book.bookName}</h3>
+
+                            <p className="book__author">
+                                by <strong>{book.authorName}</strong>
+                            </p>
+
+                            <p className="book__year">Published: {book.releaseYear}</p>
+
+                            <p>{book.amount}</p>
+
+                            <div className="flex-group">
+                                <button onClick={() => onAddClick(
+                                    book._id,
+                                    book.bookName,
+                                    book.authorName,
+                                    book.pages,
+                                    book.releaseYear,
+                                    book.image,
+                                    book.amount
+                                )}>Borrow
+                                </button>
+                                <button
+                                    className="edit-btn"
+                                    onClick={() => {
+                                        onEditClick(
+                                            book._id,
+                                            book.bookName,
+                                            book.authorName,
+                                            book.pages,
+                                            book.releaseYear,
+                                            book.image,
+                                            book.amount
+                                        );
+                                        setShowEditModal(true);
+                                    }}
+                                >
+                                    Edit
+                                </button>
+                                <ButtonDelete
+                                    onClick={() => onDeleteClick(book._id)}
+                                />
                             </div>
-                            <div className="card__body__bottom">
-                                <span>{book.amount}</span>
-                                <div className="card__body__bottom__btns">
-                                    <button onClick={() => onAddClick(
-                                        book._id,
-                                        book.bookName,
-                                        book.authorName,
-                                        book.pages,
-                                        book.releaseYear,
-                                        book.image,
-                                        book.amount
-                                    )}>Borrow
-                                    </button>
-                                    <button
-                                        className="edit-btn"
-                                        onClick={() => {
-                                            onEditClick(
-                                                book._id,
-                                                book.bookName,
-                                                book.authorName,
-                                                book.pages,
-                                                book.releaseYear,
-                                                book.image,
-                                                book.amount
-                                            );
-                                            setShowEditModal(true);
-                                        }}
-                                    >
-                                        Edit
-                                    </button>
-                                    <ButtonDelete
-                                        onClick={() => onDeleteClick(book._id)}
-                                    />
-                                </div>
-                            </div>
+
                         </div>
                     </div>
                 );
