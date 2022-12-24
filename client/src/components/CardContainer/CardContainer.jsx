@@ -15,6 +15,7 @@ const CardContainer = () => {
     const [filteredResults, setFilteredResults] = useState([]);
     const [showAddModal, setShowAddModal] = useState(false);
     const [showEditModal, setShowEditModal] = useState(false);
+
     const [newBook, setNewBook] = useState({
         id: "",
         bookName: "",
@@ -31,6 +32,19 @@ const CardContainer = () => {
         releaseYear: 0,
     });
 
+    const [userData, setUserData] = useState("");
+
+
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+
+        axios.post(API_BASE + "/userData", { token })
+            .then((res) => {
+                console.log(res.data, 'userData');
+                setUserData(res.data.data);
+            });
+
+    }, []);
 
     useEffect(() => {
         axios
@@ -110,7 +124,7 @@ const CardContainer = () => {
         try {
             // Send a request to the backend to borrow the book
             const response = await axios.put(API_BASE + '/borrowBook', {
-                userId: "63a219a580df74b5c8ba49bc",
+                userId: userData._id,
                 book: {
                     id: id,
                     bookName: bookName,

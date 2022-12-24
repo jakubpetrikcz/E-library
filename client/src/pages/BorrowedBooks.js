@@ -1,42 +1,42 @@
-import CardContainer from "../components/CardContainer/CardContainer";
 import Header from "../components/Header/Header";
 import React, {useEffect, useState} from "react";
 import axios from "axios";
-import Card from "../components/Card/Card";
 import ButtonDelete from "../components/ButtonDelete/ButtonDelete";
 
 
 const API_BASE = "http://localhost:3001";
 const BorrowedBooks = () => {
     const [borrowedBooks, setBorrowedBooks] = useState([]);
-    // const [userData, setUserData] = useState("");
+    const [userData, setUserData] = useState("");
 
     useEffect(() => {
         const token = localStorage.getItem('token');
 
-        axios.post(API_BASE + "/userData", { token })
+        axios.post(API_BASE + "/userData", {token})
             .then((res) => {
                 console.log(res.data, 'userData');
                 setBorrowedBooks(res.data.data.borrowedBooks);
+                setUserData(res.data.data);
             });
 
     }, []);
 
-    // const deleteBook = async (id) => {
-    //     axios
-    //         .delete(API_BASE + `/book/delete/${id}`)
-    //         .then((res) => {
-    //             const data = res.data;
-    //             setBorrowedBooks((books) =>
-    //                 books.filter((book) => book._id !== data._id)
-    //             );
-    //         })
-    //         .catch((err) => console.log(err));
-    // };
+    const deleteBook = async (id) => {
+        axios
+            .put(API_BASE + `/borrowBook/${id}`, {
+                userId: userData._id,
+                bookId: id,
+            })
+            .then((res) => {
+                const data = res.data;
+                setBorrowedBooks(data.user.borrowedBooks);
+            })
+            .catch((err) => console.log(err));
+    };
 
     return (
         <>
-            <Header />
+            <Header/>
             <div className="grid-container">
                 {borrowedBooks.map((book, index) => {
                     return (
@@ -61,7 +61,7 @@ const BorrowedBooks = () => {
                                 <div className="card__body__bottom">
                                     <div className="card__body__bottom__btns">
                                         <ButtonDelete
-                                            // onClick={() => deleteBook(book._id)}
+                                            onClick={() => deleteBook(book.id)}
                                         />
                                     </div>
                                 </div>

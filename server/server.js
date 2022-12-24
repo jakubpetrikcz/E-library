@@ -7,7 +7,9 @@ const {
     updateBook,
     deleteBook
 } = require('./controllers/bookController');
-const {getAllUsers, createUser, deleteUser, updateUser, findUserToLogin, userData, addBookToBorrowedList} = require("./controllers/userController");
+const {getAllUsers, createUser, deleteUser, updateUser, findUserToLogin, userData, addBookToBorrowedList,
+    removeBookFromBorrowedList
+} = require("./controllers/userController");
 
 
 const app = express();
@@ -40,6 +42,7 @@ app.put("/user/update/:id", updateUser);
 app.post("/user/login", findUserToLogin);
 app.post("/userData", userData);
 app.put("/borrowBook", addBookToBorrowedList);
+app.put("/borrowBook/:id", removeBookFromBorrowedList);
 
 // app.post("/register", (req, res) => {
 //     console.log(req.body);

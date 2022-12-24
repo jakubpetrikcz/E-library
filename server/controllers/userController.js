@@ -105,7 +105,6 @@ const userData = async (req, res) => {
 
     try {
         const user = jwt.verify(token, "secret123");
-        // console.log(user);
 
         const username = user.username;
         UserController.findOne({ username: username })
@@ -123,8 +122,6 @@ const addBookToBorrowedList = async (req, res) => {
     try {
         const { userId, book } = req.body;
 
-        console.log(book);
-
         // Update the user document to add the borrowed book
         const user = await UserController.findByIdAndUpdate(userId, {
             $push: { borrowedBooks: book }
@@ -138,6 +135,23 @@ const addBookToBorrowedList = async (req, res) => {
     }
 }
 
+const removeBookFromBorrowedList = async (req, res) => {
+    try {
+        const { userId, bookId } = req.body;
+
+        // Update the user document to remove the borrowed book
+        const user = await UserController.findByIdAndUpdate(userId, {
+            $pull: { borrowedBooks: { id: bookId } }
+        }, { new: true });
+
+        // Return the updated user document
+        res.send({ user });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send(error);
+    }
+};
+
 module.exports = {
     getAllUsers,
     createUser,
@@ -146,4 +160,5 @@ module.exports = {
     findUserToLogin,
     userData,
     addBookToBorrowedList,
+    removeBookFromBorrowedList,
 }

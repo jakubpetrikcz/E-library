@@ -20,7 +20,7 @@ const UserSchema = new Schema(
             type: String,
         },
         borrowedBooks: [{
-            type: Object, // tady je objectId, což možná bere jenom ID?
+            type: Object,
             ref: "Book"
         }]
     },
