@@ -1,20 +1,25 @@
 import Header from "../components/Header/Header";
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useState, useContext} from "react";
 import axios from "axios";
 import ButtonDelete from "../components/ButtonDelete/ButtonDelete";
+import {UserContext} from "../components/UserContext";
 
 
 const API_BASE = "http://localhost:3001";
 const BorrowedBooks = () => {
+    // const {userData} = useContext(UserContext);
+
     const [borrowedBooks, setBorrowedBooks] = useState([]);
     const [userData, setUserData] = useState("");
 
     useEffect(() => {
-        const token = localStorage.getItem('token');
+
+        // setBorrowedBooks(userData.borrowedBooks);
+        const token = JSON.parse(localStorage.getItem('token')).token;
 
         axios.post(API_BASE + "/userData", {token})
             .then((res) => {
-                console.log(res.data, 'userData');
+                // console.log(res.data, 'userData');
                 setBorrowedBooks(res.data.data.borrowedBooks);
                 setUserData(res.data.data);
             });

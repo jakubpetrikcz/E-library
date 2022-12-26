@@ -6,18 +6,18 @@ import axios from "axios";
 const API_BASE = "http://localhost:3001";
 
 const Header = () => {
-    const [userData, setUserData] = useState("");
+    const user = JSON.parse(localStorage.getItem('token'));
 
-    useEffect(() => {
-        const token = localStorage.getItem('token');
-
-        axios.post(API_BASE + "/userData", { token })
-            .then((res) => {
-                console.log(res.data, 'userData');
-                setUserData(res.data.data);
-            });
-
-    }, []);
+    // useEffect(() => {
+    //     const token = localStorage.getItem('token');
+    //
+    //     axios.post(API_BASE + "/userData", { token })
+    //         .then((res) => {
+    //             // console.log(res.data, 'userData');
+    //             setUserData(res.data.data);
+    //         });
+    //
+    // }, []);
     const handleLogout = () => {
         localStorage.removeItem("token");
         window.location.reload();
@@ -36,7 +36,7 @@ const Header = () => {
                         {/*<Link to="/register">Register</Link>*/}
                     </nav>
                     <div>
-                        <span>{userData.name}</span>
+                        <span>{user.user.name}</span>
                         <button onClick={handleLogout}>Logout</button>
                     </div>
                 </div>

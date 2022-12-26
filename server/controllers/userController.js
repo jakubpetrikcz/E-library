@@ -94,14 +94,14 @@ const findUserToLogin = async (req, res) => {
             surname: user.surname,
             username: user.username,
         }, "secret123")
-        return res.json({status: "ok", user: token})
+        return res.json({user: user, token});
     } else {
-        return res.json({status: "error", user: false})
+        return res.json({status: "error", user: false});
     }
 }
 
 const userData = async (req, res) => {
-    const { token } = req.body;
+    const {token} = req.body;
 
     try {
         const user = jwt.verify(token, "secret123");

@@ -1,4 +1,4 @@
-// import CardContainer from "../components/CardContainer/CardContainer";
+// import BookList from "../components/BookList/BookList";
 
 import React, {useState} from "react";
 import axios from "axios";
@@ -23,7 +23,7 @@ const Login = () => {
         await axios.post(API_BASE + "/user/login", user)
             .then((res) => {
                 if (res.data.user) {
-                    localStorage.setItem("token", res.data.user);
+                    localStorage.setItem("token", JSON.stringify(res.data));
                     alert("Login successful");
                     window.location.href = "/";
                 } else {
