@@ -13,19 +13,6 @@ import Header from "./components/Header/Header";
 
 const API_BASE = "http://localhost:3001";
 
-
-
-// export const getUserData = () => {
-//     const token = localStorage.getItem("token");
-//
-//     axios
-//         .post(API_BASE + "/userData", { token })
-//         .then((res) => {
-//             setUserData(res.data.data);
-//         })
-//         .catch((error) => console.error(error));
-// };
-
 function App() {
     const user = localStorage.getItem("token");
 

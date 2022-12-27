@@ -19,7 +19,6 @@ const BorrowedBooks = () => {
 
         axios.post(API_BASE + "/userData", {token})
             .then((res) => {
-                // console.log(res.data, 'userData');
                 setBorrowedBooks(res.data.data.borrowedBooks);
                 setUserData(res.data.data);
             });

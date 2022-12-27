@@ -15,8 +15,7 @@ const insertUsers = async (users) => {
             await Promise.all(insertPromises);
 
             console.log("Successfully saved all users.");
-        }
-        else {
+        } else {
             console.log("Users collection is not empty, not inserting users.");
         }
     } catch (err) {
@@ -72,7 +71,7 @@ const deleteUser = async (req, res) => {
 };
 
 const updateUser = async (req, res) => {
-    const result = await UserController.findByIdAndUpdate({ _id: req.params.id }, req.body);
+    const result = await UserController.findByIdAndUpdate({_id: req.params.id}, req.body);
 
     res.json(result);
 };
@@ -94,7 +93,13 @@ const findUserToLogin = async (req, res) => {
             surname: user.surname,
             username: user.username,
         }, "secret123")
-        return res.json({user: user, token});
+        return res.json({
+            user: {
+                _id: user._id,
+                name: user.name,
+                surname: user.surname,
+            }, token
+        });
     } else {
         return res.json({status: "error", user: false});
     }
@@ -107,28 +112,29 @@ const userData = async (req, res) => {
         const user = jwt.verify(token, "secret123");
 
         const username = user.username;
-        UserController.findOne({ username: username })
+        UserController.findOne({username: username})
             .then((data) => {
-                res.send({ status: "ok", data: data });
+                res.send({status: "ok", data: data});
             })
             .catch((error) => {
-                res.send({ status: "error", data: error });
+                res.send({status: "error", data: error});
             });
-    } catch (error) {}
+    } catch (error) {
+    }
 }
 
 
 const addBookToBorrowedList = async (req, res) => {
     try {
-        const { userId, book } = req.body;
+        const {userId, book} = req.body;
 
         // Update the user document to add the borrowed book
         const user = await UserController.findByIdAndUpdate(userId, {
-            $push: { borrowedBooks: book }
-        }, { new: true });
+            $push: {borrowedBooks: book}
+        }, {new: true});
 
         // Return the updated user document
-        res.send({ user });
+        res.send({user});
     } catch (error) {
         console.error(error);
         res.status(500).send(error);
@@ -137,15 +143,15 @@ const addBookToBorrowedList = async (req, res) => {
 
 const removeBookFromBorrowedList = async (req, res) => {
     try {
-        const { userId, bookId } = req.body;
+        const {userId, bookId} = req.body;
 
         // Update the user document to remove the borrowed book
         const user = await UserController.findByIdAndUpdate(userId, {
-            $pull: { borrowedBooks: { id: bookId } }
-        }, { new: true });
+            $pull: {borrowedBooks: {id: bookId}}
+        }, {new: true});
 
         // Return the updated user document
-        res.send({ user });
+        res.send({user});
     } catch (error) {
         console.error(error);
         res.status(500).send(error);

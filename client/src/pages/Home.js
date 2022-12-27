@@ -31,7 +31,7 @@ const Home = () => {
     // const [userData, setUserData] = useState("");
 
     const userData = JSON.parse(localStorage.getItem('token'));
-    console.log(userData);
+    // console.log(userData);
 
     // useEffect(() => {
     //     const token = localStorage.getItem('token');
