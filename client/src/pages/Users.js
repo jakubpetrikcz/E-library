@@ -1,6 +1,6 @@
-import UserCard from "../components/UserCard/UserCard";
+import User from "../components/Admin/User/User";
 import axios from "axios";
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import UsersModalEdit from "../components/UsersModalEdit/UsersModalEdit";
 import Header from "../components/Header/Header";
 
@@ -33,7 +33,7 @@ const Users = () => {
         surname,
         birthNumber,
         username,
-        password,
+        password
     ) => {
         setNewUser((prev) => {
             return {
@@ -82,26 +82,25 @@ const Users = () => {
         });
     };
 
-
-
     return (
-        <>
-            <Header />
-            <div className="grid-container">
-                <h1 className="title">Users</h1>
-                <UserCard users={users} onEditClick={editUser} setShowEditModal={setShowEditModal} onDeleteClick={deleteUser}/>
+        <div className="grid-container">
+            <h1 className="title">Users</h1>
+            <User
+                users={users}
+                onEditClick={editUser}
+                setShowEditModal={setShowEditModal}
+                onDeleteClick={deleteUser}
+            />
 
-                <UsersModalEdit
-                    isEdit={showEditModal}
-                    editUser={saveUpdatedPost}
-                    onClickClose={() => setShowEditModal(false)}
-                    handleChange={handleChange}
-                    newUser={newUser}
-                />
-            </div>
-        </>
-
-    )
-}
+            <UsersModalEdit
+                isEdit={showEditModal}
+                editUser={saveUpdatedPost}
+                onClickClose={() => setShowEditModal(false)}
+                handleChange={handleChange}
+                newUser={newUser}
+            />
+        </div>
+    );
+};
 
 export default Users;
