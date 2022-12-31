@@ -2,16 +2,17 @@
 
 import React, {useState} from "react";
 import axios from "axios";
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 
 const API_BASE = "http://localhost:3001";
 
 const Login = () => {
     const [user, setUser] = useState({
-        id: "",
         username: "",
         password: "",
     });
+
+    const navigate = useNavigate()
 
     const handleInputChange = (event) => {
         const {name, value} = event.target;
@@ -23,9 +24,11 @@ const Login = () => {
         await axios.post(API_BASE + "/user/login", user)
             .then((res) => {
                 if (res.data.user) {
-                    localStorage.setItem("token", JSON.stringify(res.data));
+                    localStorage.setItem("token", JSON.stringify(res.data.user));
                     alert("Login successful");
+                    // navigate("/");
                     window.location.href = "/";
+                    console.log(res);
                 } else {
                     alert("Please check your username and password");
                 }

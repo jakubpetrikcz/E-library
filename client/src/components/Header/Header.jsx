@@ -36,7 +36,7 @@ const Header = () => {
                         {/*<Link to="/register">Register</Link>*/}
                     </nav>
                     <div>
-                        <span>{user.user.name}</span>
+                        <span>{user.name}</span>
                         <button onClick={handleLogout}>Logout</button>
                     </div>
                 </div>

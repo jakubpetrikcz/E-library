@@ -1,6 +1,6 @@
 const data = require("../data/data.json");
 const bcrypt = require("bcryptjs");
-const jwt = require('jsonwebtoken');
+const jwt = require("jsonwebtoken");
 
 const UserController = require("../models/user");
 
@@ -9,8 +9,9 @@ const insertUsers = async (users) => {
         const numUsers = await UserController.countDocuments();
 
         if (numUsers === 0) {
-
-            const insertPromises = users.map(user => UserController.insertMany(user));
+            const insertPromises = users.map((user) =>
+                UserController.insertMany(user)
+            );
 
             await Promise.all(insertPromises);
 
@@ -21,7 +22,7 @@ const insertUsers = async (users) => {
     } catch (err) {
         console.log("Error saving users: ", err);
     }
-}
+};
 
 insertUsers(data.users);
 
@@ -58,9 +59,9 @@ const createUser = async (req, res) => {
             birthNumber: req.body.birthNumber,
             username: req.body.username,
             password: newPassword,
-        })
+        });
     } catch (err) {
-        console.log(err)
+        console.log(err);
     }
 };
 
@@ -71,7 +72,10 @@ const deleteUser = async (req, res) => {
 };
 
 const updateUser = async (req, res) => {
-    const result = await UserController.findByIdAndUpdate({_id: req.params.id}, req.body);
+    const result = await UserController.findByIdAndUpdate(
+        { _id: req.params.id },
+        req.body
+    );
 
     res.json(result);
 };
@@ -79,79 +83,94 @@ const updateUser = async (req, res) => {
 const findUserToLogin = async (req, res) => {
     const user = await UserController.findOne({
         username: req.body.username,
-    })
+    });
 
     if (!user) {
-        return {status: "error", error: "Invalid login"}
+        return { status: "error", error: "Invalid login" };
     }
 
-    const isPasswordValid = await bcrypt.compare(req.body.password, user.password);
+    const isPasswordValid = await bcrypt.compare(
+        req.body.password,
+        user.password
+    );
+
+    // const { password, isAdmin } = user;
+
+    const { password, username, birthNumber, borrowedBooks, ...otherDetails } = user._doc;
 
     if (isPasswordValid) {
-        const token = jwt.sign({
-            name: user.name,
-            surname: user.surname,
-            username: user.username,
-        }, "secret123")
-        return res.json({
-            user: {
-                _id: user._id,
-                name: user.name,
-                surname: user.surname,
-            }, token
-        });
+        const token = jwt.sign({ id: user._id }, "secret123");
+        // return res.json({
+        //     user: {
+        //         _id: user._id,
+        //         name: user.name,
+        //         surname: user.surname,
+        //     }, token
+        // });
+        return res
+            .cookie("access_token", token, {
+                httpOnly: true,
+            })
+            .status(200)
+            .json({ user: { ...otherDetails } });
     } else {
-        return res.json({status: "error", user: false});
+        return res.json({ status: "error", user: false });
     }
-}
+};
 
 const userData = async (req, res) => {
-    const {token} = req.body;
+    const { token } = req.body;
 
     try {
         const user = jwt.verify(token, "secret123");
 
         const username = user.username;
-        UserController.findOne({username: username})
+        UserController.findOne({ username: username })
             .then((data) => {
-                res.send({status: "ok", data: data});
+                res.send({ status: "ok", data: data });
             })
             .catch((error) => {
-                res.send({status: "error", data: error});
+                res.send({ status: "error", data: error });
             });
-    } catch (error) {
-    }
-}
-
+    } catch (error) {}
+};
 
 const addBookToBorrowedList = async (req, res) => {
     try {
-        const {userId, book} = req.body;
+        const { userId, book } = req.body;
 
         // Update the user document to add the borrowed book
-        const user = await UserController.findByIdAndUpdate(userId, {
-            $push: {borrowedBooks: book}
-        }, {new: true});
+        const user = await UserController.findByIdAndUpdate(
+            userId,
+            {
+                $push: { borrowedBooks: book },
+            },
+            { new: true }
+        );
 
         // Return the updated user document
-        res.send({user});
+        res.send({ user });
     } catch (error) {
         console.error(error);
         res.status(500).send(error);
     }
-}
+};
 
 const removeBookFromBorrowedList = async (req, res) => {
     try {
-        const {userId, bookId} = req.body;
+        const { userId, bookId } = req.body;
 
         // Update the user document to remove the borrowed book
-        const user = await UserController.findByIdAndUpdate(userId, {
-            $pull: {borrowedBooks: {id: bookId}}
-        }, {new: true});
+        const user = await UserController.findByIdAndUpdate(
+            userId,
+            {
+                $pull: { borrowedBooks: { id: bookId } },
+            },
+            { new: true }
+        );
 
         // Return the updated user document
-        res.send({user});
+        res.send({ user });
     } catch (error) {
         console.error(error);
         res.status(500).send(error);
@@ -167,4 +186,4 @@ module.exports = {
     userData,
     addBookToBorrowedList,
     removeBookFromBorrowedList,
-}
+};
