@@ -1,20 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 // import routes from './routes';
 import Home from "./pages/Home";
-import Users from "./pages/Users";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
 import BorrowedBooks from "./pages/BorrowedBooks";
-import UserContextProvider, { UserContext } from "./components/UserContext";
-import axios from "axios";
-import { useQuery } from "react-query";
-import Header from "./components/Header/Header";
 import Admin from "./pages/Admin";
-import DataList from "./components/Admin/DataList/DataList";
-import { userColumns } from "./DataTableSource";
+import DataList from "./components/Admin/Container/Container";
 
-const API_BASE = "http://localhost:3001";
 
 function App() {
     const user = localStorage.getItem("token");
@@ -42,10 +35,8 @@ function App() {
                     <Route path="/" exact element={<Home />} />
                     <Route path="/borrowed" exact element={<BorrowedBooks />} />
                     <Route path="/admin" element={<Admin />} />
-                    <Route
-                        path="/admin/users"
-                        element={<DataList columns={userColumns} />}
-                    />
+                    <Route path="/admin/users" element={<DataList />} />
+                    <Route path="/admin/books" element={<DataList />} />
                 </>
             )}
             <Route path="/" element={<Navigate replace to="/login" />} />

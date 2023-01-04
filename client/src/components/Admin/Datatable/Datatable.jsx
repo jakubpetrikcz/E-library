@@ -1,18 +1,18 @@
-import React from "react";
-import { useLocation } from "react-router-dom";
-import UserList from "../UserList/UserList";
+// import React, { useState, useEffect } from "react";
+// import { useLocation } from "react-router-dom";
+// import UserList from "../UserList/UserList";
+// import axios from "axios";
 
-const Datatable = () => {
-    const location = useLocation();
-    const path = location.pathname.split("/")[2];
+// const API_BASE = "http://localhost:3001";
 
-    return (
-        <div className="datatable">
-            <div className="datatableTitle">{path}</div>
+// const Datatable = () => {
+    
 
-            <UserList />
-        </div>
-    );
-};
+//     return (
+//         <div className="datatable">
+//             <UserList data={data} path={path} />
+//         </div>
+//     );
+// };
 
-export default Datatable;
+// export default Datatable;

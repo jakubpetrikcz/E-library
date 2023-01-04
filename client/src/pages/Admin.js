@@ -1,14 +1,10 @@
 import React from "react";
-import AdminPanel from "../components/Admin/AdminPanel/AdminPanel";
-import Widget from "../components/Admin/Widget/Widget";
+import SideBar from "../components/Admin/SideBar/SideBar";
 
 const Admin = () => {
     return (
-        <div>
-            <AdminPanel />
-            <div className="widgets">
-                <Widget type="user" />
-            </div>
+        <div className="grid-container">
+            <SideBar />
         </div>
     );
 };

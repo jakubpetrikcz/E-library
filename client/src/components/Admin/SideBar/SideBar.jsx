@@ -1,14 +1,14 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import "./AdminPanel.scss";
+import "./SideBar.scss";
 
-const AdminPanel = () => {
+const SideBar = () => {
     return (
         <header className="admin__panel">
-            <div className="grid-container flex">
+            <div className="flex">
                 <nav className="column">
                     <Link to="/admin/users">Users</Link>
-                    <Link to="/admin/users">Users</Link>
+                    <Link to="/admin/books">Books</Link>
                     <Link to="/admin/users">Users</Link>
                     <Link to="/admin/users">Users</Link>
                 </nav>
@@ -21,4 +21,4 @@ const AdminPanel = () => {
     );
 };
 
-export default AdminPanel;
+export default SideBar;

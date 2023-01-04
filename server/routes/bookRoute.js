@@ -9,8 +9,8 @@ const {
 } = require('../controllers/bookController');
 
 router.get("/books", getAllBooks);
-router.post("/book/new", createBook);
-router.delete("/book/delete/:id", deleteBook);
-router.put("/book/update/:id", updateBook);
+router.post("/books/new", createBook);
+router.delete("/books/delete/:id", deleteBook);
+router.put("/books/update/:id", updateBook);
 
 module.exports = router;
