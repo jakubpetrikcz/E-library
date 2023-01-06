@@ -7,10 +7,13 @@ import Login from "./pages/Login";
 import BorrowedBooks from "./pages/BorrowedBooks";
 import Admin from "./pages/Admin";
 import DataList from "./components/Admin/Container/Container";
-
+import PrivateRoutes from './components/PrivateRoutes';
+// import { QueryClient, QueryClientProvider } from "react-query";
 
 function App() {
-    const user = localStorage.getItem("token");
+    // const user = localStorage.getItem("token");
+
+    // const client = new QueryClient();
 
     // let userData = "";
 
@@ -28,18 +31,16 @@ function App() {
 
     return (
         <Routes>
-            <Route path="/register" exact element={<Register />} />
-            <Route path="/login" exact element={<Login />} />
-            {user && (
-                <>
-                    <Route path="/" exact element={<Home />} />
-                    <Route path="/borrowed" exact element={<BorrowedBooks />} />
-                    <Route path="/admin" element={<Admin />} />
-                    <Route path="/admin/users" element={<DataList />} />
-                    <Route path="/admin/books" element={<DataList />} />
-                </>
-            )}
-            <Route path="/" element={<Navigate replace to="/login" />} />
+            <Route element={<PrivateRoutes />}>
+                <Route path="/" element={<Home />} />
+                <Route path="/borrowed" element={<BorrowedBooks />} />
+                <Route path="/admin" element={<Admin />} />
+                <Route path="/admin/users" element={<DataList />} />
+                <Route path="/admin/books" element={<DataList />} />
+            </Route>
+            <Route path="/register" element={<Register />} />
+            <Route path="/login" element={<Login />} />
+            {/* <Route path="/" element={<Navigate replace to="/login" />} /> */}
         </Routes>
     );
 }

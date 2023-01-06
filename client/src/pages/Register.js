@@ -23,7 +23,7 @@ const Register = () => {
 
     const registerUser = async (event) => {
         event.preventDefault();
-        await axios.post(API_BASE + "/user/new", user)
+        await axios.post(API_BASE + "/users/new", user)
             .then((res) => console.log(res))
             .catch((err) => console.log(err))
 

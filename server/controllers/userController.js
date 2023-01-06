@@ -1,6 +1,7 @@
 const data = require("../data/data.json");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const { createError } = require("../utils/createError");
 
 const UserController = require("../models/user");
 
@@ -52,13 +53,15 @@ const getAllUsers = async (req, res) => {
 
 const createUser = async (req, res) => {
     try {
-        const newPassword = await bcrypt.hash(req.body.password, 10);
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(req.body.password, salt);
+        // const newPassword = await bcrypt.hash(req.body.password, 10);
         await UserController.create({
             name: req.body.name,
             surname: req.body.surname,
             birthNumber: req.body.birthNumber,
             username: req.body.username,
-            password: newPassword,
+            password: hashedPassword,
         });
     } catch (err) {
         console.log(err);
@@ -80,59 +83,106 @@ const updateUser = async (req, res) => {
     res.json(result);
 };
 
-const findUserToLogin = async (req, res) => {
-    const user = await UserController.findOne({
-        username: req.body.username,
-    });
-
-    if (!user) {
-        return { status: "error", error: "Invalid login" };
+const findUserToLogin = async (req, res, next) => {
+    if (!req.body.username || !req.body.password) {
+        return next(
+            createError({
+                message: "Email and password are required",
+                statusCode: 400,
+            })
+        );
     }
 
-    const isPasswordValid = await bcrypt.compare(
-        req.body.password,
-        user.password
-    );
+    try {
+        const user = await UserController.findOne({
+            username: req.body.username,
+        }).select("name surname password");
+        if (!user) {
+            return next(
+                createError({
+                    status: 404,
+                    message: "User not found with the username",
+                })
+            );
+        }
+        const isPasswordCorrect = await bcrypt.compare(
+            req.body.password,
+            user.password
+        );
+        if (!isPasswordCorrect) {
+            return next(
+                createError({ status: 400, message: "Password is incorrect" })
+            );
+        }
+        const payload = {
+            id: user._id,
+            name: user.name,
+        };
+        const token = jwt.sign(payload, "secret123", {
+            expiresIn: "1d",
+        });
 
-    // const { password, isAdmin } = user;
-
-    const { password, username, birthNumber, borrowedBooks, ...otherDetails } = user._doc;
-
-    if (isPasswordValid) {
-        const token = jwt.sign({ id: user._id }, "secret123");
-        // return res.json({
-        //     user: {
-        //         _id: user._id,
-        //         name: user.name,
-        //         surname: user.surname,
-        //     }, token
-        // });
-        return res
-            .cookie("access_token", token, {
-                httpOnly: true,
-            })
-            .status(200)
-            .json({ user: { ...otherDetails } });
-    } else {
-        return res.json({ status: "error", user: false });
+        console.log(
+            res
+                .cookie("token", token, {
+                    httpOnly: true,
+                })
+                .status(200)
+                .json({
+                    name: user.name,
+                    surname: user.surname,
+                    message: "login success",
+                })
+        );
+    } catch (err) {
+        return next(err);
     }
 };
 
-const userData = async (req, res) => {
-    const { token } = req.body;
-
+const userData = async (req, res, next) => {
     try {
-        const user = jwt.verify(token, "secret123");
+        const data = await UserController.findById(req.user.id);
+        return res.status(200).json(data);
+    } catch (err) {
+        return next(err);
+    }
+    // const token = req.cookies.access_token;
 
-        const username = user.username;
-        UserController.findOne({ username: username })
-            .then((data) => {
-                res.send({ status: "ok", data: data });
-            })
-            .catch((error) => {
-                res.send({ status: "error", data: error });
-            });
-    } catch (error) {}
+    // console.log(req);
+
+    // try {
+    //     const user = jwt.verify(token, "secret123");
+
+    //     const userId = user.id;
+    //     UserController.findOne({ _id: userId })
+    //         .then((data) => {
+    //             // console.log(data);
+    //             res.send({ status: "ok", data: data });
+    //         })
+    //         .catch((error) => {
+    //             res.send({ status: "error", data: error });
+    //         });
+    // } catch (err) {
+    //     console.log(err);
+    // }
+};
+
+const logout = async (req, res) => {
+    res.clearCookie("token");
+    return res.status(200).json({ message: "logout success" });
+};
+
+const isLoggedIn = async (req, res) => {
+    const token = req.cookies.token;
+    if (!token) {
+        return res.json(false);
+    }
+    return jwt.verify(token, "secret123", (err) => {
+        if (err) {
+            return res.json(false);
+        }
+        return res.json(true);
+    });
 };
 
 const addBookToBorrowedList = async (req, res) => {
@@ -184,6 +234,8 @@ module.exports = {
     updateUser,
     findUserToLogin,
     userData,
+    logout,
+    isLoggedIn,
     addBookToBorrowedList,
     removeBookFromBorrowedList,
 };

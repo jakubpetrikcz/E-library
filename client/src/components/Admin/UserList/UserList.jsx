@@ -4,6 +4,8 @@ import User from "../User/User";
 import "./UserList.scss";
 import axios from "axios";
 import BooksModalEdit from "../../BooksModalEdit/BooksModalEdit";
+import ButtonAdd from "../../ButtonAdd/ButtonAdd";
+import BooksModalAdd from "../../BooksModalAdd/BooksModalAdd";
 
 const API_BASE = "http://localhost:3001";
 
@@ -13,6 +15,7 @@ const UserList = () => {
 
     const [data, setData] = useState([]);
     const [showEditModal, setShowEditModal] = useState(false);
+    const [showAddModal, setShowAddModal] = useState(false);
     const [newBook, setNewBook] = useState({
         id: "",
         bookName: "",
@@ -53,18 +56,18 @@ const UserList = () => {
     };
 
     const saveUpdatedPost = async (entityType) => {
-        if (entityType === 'book') {
+        if (entityType === "book") {
             axios
                 .put(API_BASE + `/books/update/${newBook.id}`, newBook)
                 .then((res) => console.log(res))
                 .catch((err) => console.log(err));
-        } else if (entityType === 'user') {
+        } else if (entityType === "user") {
             axios
                 .put(API_BASE + `/users/update/${newUser.id}`, newUser)
                 .then((res) => console.log(res))
                 .catch((err) => console.log(err));
         }
-    
+
         setShowEditModal(false);
         window.location.reload();
     };
@@ -102,14 +105,14 @@ const UserList = () => {
 
     const handleChange = (e, entityType) => {
         const { name, value } = e.target;
-        if (entityType === 'book') {
+        if (entityType === "book") {
             setNewBook((prev) => {
                 return {
                     ...prev,
                     [name]: value,
                 };
             });
-        } else if (entityType === 'user') {
+        } else if (entityType === "user") {
             setNewUser((prev) => {
                 return {
                     ...prev,
@@ -118,6 +121,8 @@ const UserList = () => {
             });
         }
     };
+
+    
 
     return (
         <>
@@ -138,9 +143,15 @@ const UserList = () => {
                     newBook={newBook}
                     newUser={newUser}
                 />
-            ) : (
-                ""
-            )}
+            ) : null}
+
+            <ButtonAdd onClick={() => setShowAddModal(true)} />
+            {showAddModal ? (
+                <BooksModalAdd
+                    path={path}
+                    onClickClose={() => setShowAddModal(false)}
+                />
+            ) : null}
         </>
     );
 };
