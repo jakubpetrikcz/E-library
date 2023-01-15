@@ -28,6 +28,9 @@ const BookSchema = new Schema(
             type: Number,
             // required: true,
         },
+        borrowedDate: {
+            type: Date,
+        }
     },
     {versionKey: false}
 );

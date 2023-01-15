@@ -2,8 +2,10 @@ const data = require("../data/data.json");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { createError } = require("../utils/createError");
+const cron = require("node-cron");
 
 const UserController = require("../models/user");
+const BookController = require("../models/book");
 
 const insertUsers = async (users) => {
     try {
@@ -122,18 +124,15 @@ const findUserToLogin = async (req, res, next) => {
             expiresIn: "1d",
         });
 
-        console.log(
-            res
-                .cookie("token", token, {
-                    httpOnly: true,
-                })
-                .status(200)
-                .json({
-                    name: user.name,
-                    surname: user.surname,
-                    message: "login success",
-                })
-        );
+        res.cookie("token", token, {
+            httpOnly: true,
+        })
+            .status(200)
+            .json({
+                name: user.name,
+                surname: user.surname,
+                message: "login success",
+            });
     } catch (err) {
         return next(err);
     }
@@ -189,8 +188,15 @@ const addBookToBorrowedList = async (req, res) => {
     try {
         const { userId, book } = req.body;
 
+        const update = { borrowedDate: Date.now() };
+        const updatedBook = await BookController.findOneAndUpdate(
+            { _id: book.id },
+            update,
+            { new: true }
+        );
+        //console.log(book);
         // Update the user document to add the borrowed book
-        const user = await UserController.findByIdAndUpdate(
+        await UserController.findByIdAndUpdate(
             userId,
             {
                 $push: { borrowedBooks: book },
@@ -198,8 +204,27 @@ const addBookToBorrowedList = async (req, res) => {
             { new: true }
         );
 
-        // Return the updated user document
-        res.send({ user });
+        console.log(book);
+        console.log(updatedBook);
+
+        cron.schedule("*/10 * * * * *", async function () {
+            const currentDate = new Date();
+            const borrowedDate = new Date(updatedBook.borrowedDate);
+            console.log(
+                currentDate.getTime() - borrowedDate.getTime() >= 10 * 1000
+            );
+            if (currentDate.getTime() - borrowedDate.getTime() >= 10 * 1000) {
+                const user = await UserController.findByIdAndUpdate(
+                    userId,
+                    {
+                        $pull: { borrowedBooks: book },
+                    },
+                    { new: true }
+                );
+                // Return the updated user document
+                res.send({ user });
+            }
+        });
     } catch (error) {
         console.error(error);
         res.status(500).send(error);

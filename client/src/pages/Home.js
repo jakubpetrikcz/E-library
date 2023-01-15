@@ -72,10 +72,10 @@ const Home = () => {
                     pages: book.pages,
                     releaseYear: book.releaseYear,
                     image: book.image,
-                    amount: book.amount,
+                    amount: 1,
                 },
             });
-            // console.log(response);
+            console.log(response);
         } catch (error) {
             console.error(error);
         }
